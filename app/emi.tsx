@@ -1,17 +1,120 @@
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { type AmortizationEntry, calculateAmortization } from "@/lib/utils";
+import { printToFileAsync } from "expo-print";
 import { useRouter } from "expo-router";
 import { shareAsync } from "expo-sharing";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
-import { Appbar, Card, DataTable, Text, TextInput } from "react-native-paper";
+import {
+	Appbar,
+	Button,
+	Card,
+	DataTable,
+	List,
+	Text,
+	TextInput,
+} from "react-native-paper";
+
+interface Data {
+	principalAmount: string;
+	tenureYears: string;
+	rateOfInterest: string;
+	emi: string;
+	totalAmountWithInterest: string;
+	amortizationSchedule: AmortizationEntry[];
+}
+
+const generateHtml = (data: Data) => {
+	const rows = data.amortizationSchedule
+		.map((it) => {
+			const monthYear = `${it.month} ${it.year}`;
+			return `<tr>
+          <td class="px-6 py-3 text-sm font-medium whitespace-nowrap text-gray-800">${monthYear}</td>
+          <td class="px-6 py-3 text-sm whitespace-nowrap text-gray-800">${it.principalPaid}</td>
+          <td class="px-6 py-3 text-sm whitespace-nowrap text-gray-800">${it.interestCharged}</td>
+          <td class="px-6 py-3 text-sm whitespace-nowrap text-gray-800">${it.balance}</td>
+        </tr>`;
+		})
+		.join("\n");
+
+	return `
+    <html lang="en">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+      </head>
+      <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+      <body>
+      <div class="flex min-h-screen min-w-xl flex-col items-center pt-16">
+          <h1 class="text-3xl font-medium">EMI Report</h1>
+          <div class="flex p-16">
+            <div class="mx-auto rounded-lg border border-gray-200">
+              <table class="flex justify-center divide-y divide-gray-200">
+                <tbody class="divide-y divide-gray-200">
+                  <tr>
+                    <td class="px-6 py-3 text-sm font-medium whitespace-nowrap text-gray-800">Principal Amount</td>
+                    <td class="px-6 py-3 text-sm whitespace-nowrap text-gray-800">${data.principalAmount}</td>
+                  </tr>
+
+                  <tr>
+                    <td class="px-6 py-3 text-sm font-medium whitespace-nowrap text-gray-800">Rate of Interest</td>
+                    <td class="px-6 py-3 text-sm whitespace-nowrap text-gray-800">${data.rateOfInterest}</td>
+                  </tr>
+
+                  <tr>
+                    <td class="px-6 py-3 text-sm font-medium whitespace-nowrap text-gray-800">Tenure (in years)</td>
+                    <td class="px-6 py-3 text-sm whitespace-nowrap text-gray-800">${data.tenureYears}</td>
+                  </tr>
+                  
+                  <tr>
+                    <td class="px-6 py-3 text-sm font-medium whitespace-nowrap text-gray-800">EMI</td>
+                    <td class="px-6 py-3 text-sm whitespace-nowrap text-gray-800">${data.emi}</td>
+                  </tr>
+                  
+                  <tr>
+                    <td class="px-6 py-3 text-sm font-medium whitespace-nowrap text-gray-800">Total Amount (with Interest)</td>
+                    <td class="px-6 py-3 text-sm whitespace-nowrap text-gray-800">${data.totalAmountWithInterest}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <h1 class="text-3xl font-medium">Payment Schedule</h1>
+          
+          <div class="pt-9">
+            <div class="-m-1.5">
+              <div class="inline-block p-1.5 align-middle">
+                <div class="overflow-hidden rounded-lg border border-gray-200">
+                  <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                      <tr>
+                        <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Month</th>
+                        <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Principal</th>
+                        <th scope="col" class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Interest</th>
+                        <th scope="col" class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Balance</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                       ${rows}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+      </body>
+    </html>
+`;
+};
 
 export default function EMI() {
 	const theme = useColorScheme();
 	const router = useRouter();
 	const [amount, setAmount] = useState("100000");
 	const [interestRate, setInterestRate] = useState("4.5");
-	const [tenure, setTenure] = useState("10");
+	const [tenure, setTenure] = useState("1");
 
 	const onAmountChange = (text: string) => {
 		const numericText = text.replace(/[^0-9.]/g, "");
@@ -71,15 +174,48 @@ export default function EMI() {
 		},
 	];
 
+	const [tableDataCount, setTableDataCount] = useState(3);
+	const [tableData, setTableData] = useState<[string, AmortizationEntry[]][]>(
+		[],
+	);
+
+	const loadMore = (start: number, end: number) => {
+		const slicedPosts = Object.entries(
+			calculateAmortization(+amount, +interestRate / 100, +tenure),
+		).slice(start, end);
+		setTableData(slicedPosts);
+	};
+
+	useEffect(() => {
+		loadMore(0, tableDataCount);
+	}, [tableDataCount, amount, interestRate, tenure]);
+
+	const handleShowMorePosts = () => {
+		setTableDataCount((curr) => curr + 3);
+	};
+
+	const printToFile = async () => {
+		console.log(tableData.flatMap(([_, entries]) => entries));
+		const { uri } = await printToFileAsync({
+			html: generateHtml({
+				principalAmount: `₹ ${new Intl.NumberFormat().format(+amount)}`,
+				tenureYears: `${tenure} years`,
+				rateOfInterest: `${interestRate} %`,
+				emi: `₹ ${new Intl.NumberFormat().format(+parseFloat(calculateEMI()).toFixed())}`,
+				totalAmountWithInterest: `₹ ${new Intl.NumberFormat().format(parseFloat(amount) + parseFloat(calculateTotalInterest()))}`,
+				amortizationSchedule: tableData.flatMap(([_, entries]) => entries),
+			}),
+		});
+
+		await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
+	};
+
 	return (
 		<>
 			<Appbar.Header mode="small">
 				<Appbar.BackAction onPress={() => router.back()} />
 				<Appbar.Content title="EMI Calculator" />
-				<Appbar.Action
-					icon="export-variant"
-					onPress={() => shareAsync("https://reactnativepaper.com/")}
-				/>
+				<Appbar.Action icon="export-variant" onPress={printToFile} />
 			</Appbar.Header>
 			<ScrollView className="py-4">
 				<View className="flex px-4 gap-8">
@@ -206,10 +342,19 @@ export default function EMI() {
 				</View>
 
 				<View style={{ marginVertical: 48 }}>
-					<Text style={{ paddingHorizontal: 16 }} variant="headlineSmall">
+					<Text
+						style={{ paddingHorizontal: 16, marginVertical: 16 }}
+						variant="headlineSmall"
+					>
 						Amortization schedule
 					</Text>
-					<AmortizationTable />
+					<AmortizationTable data={tableData} />
+					<Button
+						style={{ marginVertical: 16, width: "auto" }}
+						onPress={handleShowMorePosts}
+					>
+						Load More
+					</Button>
 				</View>
 			</ScrollView>
 		</>
@@ -230,55 +375,36 @@ const Dot = (color: string) => {
 	);
 };
 
-const AmortizationTable = () => {
-	const [items] = useState([
-		{
-			key: 1,
-			month: "Jan",
-			principalPaid: 356,
-			interestPaid: 16,
-			balance: 2376,
-		},
-		{
-			key: 2,
-			month: "Feb",
-			principalPaid: 262,
-			interestPaid: 16,
-			balance: 2376,
-		},
-		{
-			key: 3,
-			month: "Mar",
-			principalPaid: 159,
-			interestPaid: 6,
-			balance: 2376,
-		},
-		{
-			key: 4,
-			month: "Apr",
-			principalPaid: 305,
-			interestPaid: 3.7,
-			balance: 2376,
-		},
-	]);
-
+const AmortizationTable = ({
+	data,
+}: {
+	data: [string, AmortizationEntry[]][];
+}) => {
 	return (
-		<DataTable>
-			<DataTable.Header>
-				<DataTable.Title>Month</DataTable.Title>
-				<DataTable.Title numeric>Principal Paid</DataTable.Title>
-				<DataTable.Title numeric>Interest Paid</DataTable.Title>
-				<DataTable.Title numeric>Balance</DataTable.Title>
-			</DataTable.Header>
+		<List.AccordionGroup>
+			{data.map(([year, entry], index) => (
+				<List.Accordion title={year} id={index.toString()} key={index}>
+					<DataTable>
+						<DataTable.Header>
+							<DataTable.Title>Month</DataTable.Title>
+							<DataTable.Title numeric>Principal Paid</DataTable.Title>
+							<DataTable.Title numeric>Interest Paid</DataTable.Title>
+							<DataTable.Title numeric>Balance</DataTable.Title>
+						</DataTable.Header>
 
-			{items.map((item) => (
-				<DataTable.Row key={item.key}>
-					<DataTable.Cell>{item.month}</DataTable.Cell>
-					<DataTable.Cell numeric>{item.principalPaid}</DataTable.Cell>
-					<DataTable.Cell numeric>{item.interestPaid}</DataTable.Cell>
-					<DataTable.Cell numeric>{item.balance}</DataTable.Cell>
-				</DataTable.Row>
+						{entry.map((item) => (
+							<DataTable.Row key={item.month}>
+								<DataTable.Cell>{item.month}</DataTable.Cell>
+								<DataTable.Cell numeric>₹ {item.principalPaid}</DataTable.Cell>
+								<DataTable.Cell numeric>
+									₹ {item.interestCharged}
+								</DataTable.Cell>
+								<DataTable.Cell numeric>₹ {item.balance}</DataTable.Cell>
+							</DataTable.Row>
+						))}
+					</DataTable>
+				</List.Accordion>
 			))}
-		</DataTable>
+		</List.AccordionGroup>
 	);
 };
