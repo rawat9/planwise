@@ -37,7 +37,6 @@ import {
 	AudioWaveform,
 	BadgeCheck,
 	Bell,
-	Bot,
 	ChevronRight,
 	ChevronsUpDown,
 	Command,
@@ -50,7 +49,6 @@ import {
 	MoreHorizontal,
 	PieChart,
 	Plus,
-	Settings2,
 	Sparkles,
 	SquareTerminal,
 	Trash2,
@@ -82,67 +80,79 @@ const DATA = {
 	],
 	navMain: [
 		{
-			title: "EMI",
-			url: "/emi",
+			title: "Boards",
+			url: "/boards",
 			icon: SquareTerminal,
 			isActive: true,
 			items: [
 				{
-					title: "Simple EMI",
-					url: "/emi/simple",
-				},
-				{
-					title: "Compare loans",
-					url: "/emi/compare-loans",
-				},
-				{
-					title: "Tax",
-					url: "/emi/tax",
-				},
-				{
-					title: "Tenure",
-					url: "/emi/tenure",
+					title: "test",
+					url: "/test-1",
 				},
 			],
 		},
-		{
-			title: "Loan",
-			url: "#",
-			icon: Bot,
-			items: [
-				{
-					title: "Loan profile",
-					url: "#",
-				},
-				{
-					title: "Eligibility check",
-					url: "#",
-				},
-			],
-		},
-		{
-			title: "Banking",
-			url: "#",
-			icon: Settings2,
-			items: [
-				{
-					title: "FD calculator",
-					url: "#",
-				},
-				{
-					title: "RD calculator",
-					url: "#",
-				},
-				{
-					title: "PPF calculator",
-					url: "#",
-				},
-				{
-					title: "Simple and compound",
-					url: "#",
-				},
-			],
-		},
+		// {
+		// 	title: "EMI",
+		// 	url: "/emi",
+		// 	icon: SquareTerminal,
+		// 	isActive: true,
+		// 	items: [
+		// 		{
+		// 			title: "Simple EMI",
+		// 			url: "/emi/simple",
+		// 		},
+		// 		{
+		// 			title: "Compare loans",
+		// 			url: "/emi/compare-loans",
+		// 		},
+		// 		{
+		// 			title: "Tax",
+		// 			url: "/emi/tax",
+		// 		},
+		// 		{
+		// 			title: "Tenure",
+		// 			url: "/emi/tenure",
+		// 		},
+		// 	],
+		// },
+		// {
+		// 	title: "Loan",
+		// 	url: "#",
+		// 	icon: Bot,
+		// 	items: [
+		// 		{
+		// 			title: "Loan profile",
+		// 			url: "#",
+		// 		},
+		// 		{
+		// 			title: "Eligibility check",
+		// 			url: "#",
+		// 		},
+		// 	],
+		// },
+		// {
+		// 	title: "Banking",
+		// 	url: "#",
+		// 	icon: Settings2,
+		// 	items: [
+		// 		{
+		// 			title: "FD calculator",
+		// 			url: "#",
+		// 		},
+		// 		{
+		// 			title: "RD calculator",
+		// 			url: "#",
+		// 		},
+		// 		{
+		// 			title: "PPF calculator",
+		// 			url: "#",
+		// 		},
+		// 		{
+		// 			title: "Simple and compound",
+		// 			url: "#",
+		// 		},
+		// 	],
+		// },
 	],
 	projects: [
 		{
@@ -229,7 +239,7 @@ export const AppSidebar = () => {
 			<SidebarContent>
 				{/* Nav Main */}
 				<SidebarGroup>
-					<SidebarGroupLabel>Finance</SidebarGroupLabel>
+					<SidebarGroupLabel>Boards</SidebarGroupLabel>
 					<SidebarMenu>
 						{DATA.navMain.map((item) => (
 							<Collapsible
