@@ -1,0 +1,24 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000");
+
+.tiptap.ProseMirror {
+	font-family: "DM Sans", sans-serif;
+
+	white-space: pre-wrap;
+	outline: none;
+	caret-color: var(--tt-cursor-color);
+}
+
+.pw-editor-content {
+	max-width: 648px;
+	width: 100%;
+	margin: 0 auto;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+/* .pw-editor-content .tiptap.ProseMirror.pw-editor {
+	flex: 1;
+	padding: 3rem 3rem 30vh;
+} */
