@@ -1,4 +1,5 @@
-import Editor from "@/components/editor";
+import { Excalidraw } from "@excalidraw/excalidraw";
+import "@excalidraw/excalidraw/index.css";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(productivity)/notes/")({
@@ -6,5 +7,6 @@ export const Route = createFileRoute("/(productivity)/notes/")({
 });
 
 function Notes() {
-	return <Editor />;
+	return <Excalidraw />;
+	// return <Editor />;
 }

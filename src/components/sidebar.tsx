@@ -327,7 +327,7 @@ export const AppSidebar = () => {
 				</SidebarGroup>
 				{/* Nav Project */}
 			</SidebarContent>
-			<SidebarFooter className="pb-8">
+			<SidebarFooter>
 				{/* Nav User */}
 				<SidebarMenu>
 					<SidebarMenuItem>

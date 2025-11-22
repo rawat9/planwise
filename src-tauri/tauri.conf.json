@@ -10,12 +10,16 @@
     "frontendDist": "../dist"
   },
   "app": {
+    "macOSPrivateApi": true,
     "windows": [
       {
         "title": "Planwise",
         "width": 1200,
         "height": 800,
-        "label": "main"
+        "label": "main",
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "trafficLightPosition": { "x": 15, "y": 20 }
       }
     ],
     "security": {
