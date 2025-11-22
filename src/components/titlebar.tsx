@@ -1,10 +1,22 @@
-export const TitleBar = () => {
+import { useTheme } from "@/providers/theme-provider";
+import { SidebarTrigger } from "./animate-ui/components/radix/sidebar";
+import { Button } from "./ui/button";
+
+export const Titlebar = () => {
+	const { setTheme } = useTheme();
+
 	return (
-		<div
-			data-tauri-drag-region
-			className="fixed top-0 select-none left-0 right-0 flex h-10 bg-amber-50 items-center"
-		>
-			<div className="flex flex-1 items-center pl-32 font-medium">Planwise</div>
+		<div>
+			<div
+				className="absolute top-0 h-10 select-none w-full dark:bg-slate-600"
+				data-tauri-drag-region
+			></div>
+			<div className="px-16 flex h-10 items-center absolute top-0 left-20 dark:text-white">
+				<SidebarTrigger />
+				<Button variant="ghost" onClick={() => setTheme("light")}>
+					Toggle Theme
+				</Button>
+			</div>
 		</div>
 	);
 };
