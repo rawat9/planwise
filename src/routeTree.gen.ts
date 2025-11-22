@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as productivityNotesIndexRouteImport } from './routes/(productivity)/notes/index'
 import { Route as financeEmiIndexRouteImport } from './routes/(finance)/emi/index'
@@ -17,11 +16,6 @@ import { Route as financeEmiTaxIndexRouteImport } from './routes/(finance)/emi/t
 import { Route as financeEmiSimpleIndexRouteImport } from './routes/(finance)/emi/simple/index'
 import { Route as financeEmiCompareLoansIndexRouteImport } from './routes/(finance)/emi/compare-loans/index'
 
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -56,7 +50,6 @@ const financeEmiCompareLoansIndexRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/emi': typeof financeEmiIndexRoute
   '/notes': typeof productivityNotesIndexRoute
   '/emi/compare-loans': typeof financeEmiCompareLoansIndexRoute
@@ -65,7 +58,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/emi': typeof financeEmiIndexRoute
   '/notes': typeof productivityNotesIndexRoute
   '/emi/compare-loans': typeof financeEmiCompareLoansIndexRoute
@@ -75,7 +67,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/(finance)/emi/': typeof financeEmiIndexRoute
   '/(productivity)/notes/': typeof productivityNotesIndexRoute
   '/(finance)/emi/compare-loans/': typeof financeEmiCompareLoansIndexRoute
@@ -86,7 +77,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/about'
     | '/emi'
     | '/notes'
     | '/emi/compare-loans'
@@ -95,7 +85,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/about'
     | '/emi'
     | '/notes'
     | '/emi/compare-loans'
@@ -104,7 +93,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/about'
     | '/(finance)/emi/'
     | '/(productivity)/notes/'
     | '/(finance)/emi/compare-loans/'
@@ -114,7 +102,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
   financeEmiIndexRoute: typeof financeEmiIndexRoute
   productivityNotesIndexRoute: typeof productivityNotesIndexRoute
   financeEmiCompareLoansIndexRoute: typeof financeEmiCompareLoansIndexRoute
@@ -124,13 +111,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -178,7 +158,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
   financeEmiIndexRoute: financeEmiIndexRoute,
   productivityNotesIndexRoute: productivityNotesIndexRoute,
   financeEmiCompareLoansIndexRoute: financeEmiCompareLoansIndexRoute,
