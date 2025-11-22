@@ -5,7 +5,6 @@ import {
 import { AppSidebar } from "@/components/sidebar";
 import { Titlebar } from "@/components/titlebar";
 import { ThemeProvider } from "@/providers/theme-provider";
-import "@excalidraw/excalidraw/index.css";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 
 const RootLayout = () => (
