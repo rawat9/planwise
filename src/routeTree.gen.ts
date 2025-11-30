@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as productivityTasksIndexRouteImport } from './routes/(productivity)/tasks/index'
 import { Route as productivityNotesIndexRouteImport } from './routes/(productivity)/notes/index'
 import { Route as financeEmiIndexRouteImport } from './routes/(finance)/emi/index'
 import { Route as financeEmiTaxIndexRouteImport } from './routes/(finance)/emi/tax/index'
@@ -19,6 +20,11 @@ import { Route as financeEmiCompareLoansIndexRouteImport } from './routes/(finan
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const productivityTasksIndexRoute = productivityTasksIndexRouteImport.update({
+  id: '/(productivity)/tasks/',
+  path: '/tasks/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const productivityNotesIndexRoute = productivityNotesIndexRouteImport.update({
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/emi': typeof financeEmiIndexRoute
   '/notes': typeof productivityNotesIndexRoute
+  '/tasks': typeof productivityTasksIndexRoute
   '/emi/compare-loans': typeof financeEmiCompareLoansIndexRoute
   '/emi/simple': typeof financeEmiSimpleIndexRoute
   '/emi/tax': typeof financeEmiTaxIndexRoute
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/emi': typeof financeEmiIndexRoute
   '/notes': typeof productivityNotesIndexRoute
+  '/tasks': typeof productivityTasksIndexRoute
   '/emi/compare-loans': typeof financeEmiCompareLoansIndexRoute
   '/emi/simple': typeof financeEmiSimpleIndexRoute
   '/emi/tax': typeof financeEmiTaxIndexRoute
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/(finance)/emi/': typeof financeEmiIndexRoute
   '/(productivity)/notes/': typeof productivityNotesIndexRoute
+  '/(productivity)/tasks/': typeof productivityTasksIndexRoute
   '/(finance)/emi/compare-loans/': typeof financeEmiCompareLoansIndexRoute
   '/(finance)/emi/simple/': typeof financeEmiSimpleIndexRoute
   '/(finance)/emi/tax/': typeof financeEmiTaxIndexRoute
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/'
     | '/emi'
     | '/notes'
+    | '/tasks'
     | '/emi/compare-loans'
     | '/emi/simple'
     | '/emi/tax'
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/'
     | '/emi'
     | '/notes'
+    | '/tasks'
     | '/emi/compare-loans'
     | '/emi/simple'
     | '/emi/tax'
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/(finance)/emi/'
     | '/(productivity)/notes/'
+    | '/(productivity)/tasks/'
     | '/(finance)/emi/compare-loans/'
     | '/(finance)/emi/simple/'
     | '/(finance)/emi/tax/'
@@ -104,6 +116,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   financeEmiIndexRoute: typeof financeEmiIndexRoute
   productivityNotesIndexRoute: typeof productivityNotesIndexRoute
+  productivityTasksIndexRoute: typeof productivityTasksIndexRoute
   financeEmiCompareLoansIndexRoute: typeof financeEmiCompareLoansIndexRoute
   financeEmiSimpleIndexRoute: typeof financeEmiSimpleIndexRoute
   financeEmiTaxIndexRoute: typeof financeEmiTaxIndexRoute
@@ -116,6 +129,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(productivity)/tasks/': {
+      id: '/(productivity)/tasks/'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof productivityTasksIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(productivity)/notes/': {
@@ -160,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   financeEmiIndexRoute: financeEmiIndexRoute,
   productivityNotesIndexRoute: productivityNotesIndexRoute,
+  productivityTasksIndexRoute: productivityTasksIndexRoute,
   financeEmiCompareLoansIndexRoute: financeEmiCompareLoansIndexRoute,
   financeEmiSimpleIndexRoute: financeEmiSimpleIndexRoute,
   financeEmiTaxIndexRoute: financeEmiTaxIndexRoute,

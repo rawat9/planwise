@@ -2,9 +2,7 @@
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuGroup,
 	DropdownMenuItem,
-	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuShortcut,
 	DropdownMenuTrigger,
@@ -30,30 +28,27 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "@/components/animate-ui/primitives/radix/collapsible";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Link } from "@tanstack/react-router";
 import {
 	AudioWaveform,
-	BadgeCheck,
-	Bell,
 	ChevronRight,
 	ChevronsUpDown,
 	Command,
-	CreditCard,
 	Folder,
 	Forward,
 	Frame,
 	GalleryVerticalEnd,
-	LogOut,
 	MoreHorizontal,
 	PieChart,
 	Plus,
-	Sparkles,
+	Settings,
 	SquareTerminal,
 	Trash2,
 } from "lucide-react";
 import * as React from "react";
+import { Button } from "./ui/button";
+import { ThemeSwitcher } from "./ui/theme-switcher";
 
 const DATA = {
 	user: {
@@ -175,7 +170,7 @@ export const AppSidebar = () => {
 	if (!activeTeam) return null;
 
 	return (
-		<Sidebar collapsible="icon" variant="inset">
+		<Sidebar collapsible="offcanvas" variant="inset">
 			<SidebarHeader>
 				{/* Team Switcher */}
 				<SidebarMenu>
@@ -184,7 +179,7 @@ export const AppSidebar = () => {
 							<DropdownMenuTrigger asChild>
 								<SidebarMenuButton
 									size="lg"
-									className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+									className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground w-full"
 								>
 									<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
 										<activeTeam.logo className="size-4" />
@@ -201,12 +196,12 @@ export const AppSidebar = () => {
 							<DropdownMenuContent
 								className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
 								align="start"
-								side={isMobile ? "bottom" : "right"}
+								side={"bottom"}
 								sideOffset={4}
 							>
-								<DropdownMenuLabel className="text-xs text-muted-foreground">
+								{/* <MenuGroupLabel className="text-xs text-muted-foreground">
 									Teams
-								</DropdownMenuLabel>
+								</MenuGroupLabel> */}
 								{DATA.teams.map((team, index) => (
 									<DropdownMenuItem
 										key={team.name}
@@ -328,89 +323,12 @@ export const AppSidebar = () => {
 				{/* Nav Project */}
 			</SidebarContent>
 			<SidebarFooter>
-				{/* Nav User */}
-				<SidebarMenu>
-					<SidebarMenuItem>
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<SidebarMenuButton
-									size="lg"
-									className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-								>
-									<Avatar className="h-8 w-8 rounded-lg">
-										<AvatarImage src={DATA.user.avatar} alt={DATA.user.name} />
-										<AvatarFallback className="rounded-lg">AR</AvatarFallback>
-									</Avatar>
-									<div className="grid flex-1 text-left text-sm leading-tight">
-										<span className="truncate font-semibold">
-											{DATA.user.name}
-										</span>
-										<span className="truncate text-xs">{DATA.user.email}</span>
-									</div>
-									<ChevronsUpDown className="ml-auto size-4" />
-								</SidebarMenuButton>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent
-								className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-								side={isMobile ? "bottom" : "right"}
-								align="end"
-								sideOffset={4}
-							>
-								<DropdownMenuLabel className="p-0 font-normal">
-									<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-										<Avatar className="h-8 w-8 rounded-lg">
-											<AvatarImage
-												src={DATA.user.avatar}
-												alt={DATA.user.name}
-											/>
-											<AvatarFallback className="rounded-lg">CN</AvatarFallback>
-										</Avatar>
-										<div className="grid flex-1 text-left text-sm leading-tight">
-											<span className="truncate font-semibold">
-												{DATA.user.name}
-											</span>
-											<span className="truncate text-xs">
-												{DATA.user.email}
-											</span>
-										</div>
-									</div>
-								</DropdownMenuLabel>
-								<DropdownMenuSeparator />
-								<DropdownMenuGroup>
-									<DropdownMenuItem>
-										<Sparkles />
-										Upgrade to Pro
-									</DropdownMenuItem>
-								</DropdownMenuGroup>
-								<DropdownMenuSeparator />
-								<DropdownMenuGroup>
-									<DropdownMenuItem>
-										<BadgeCheck />
-										Account
-									</DropdownMenuItem>
-									<DropdownMenuItem>
-										<CreditCard />
-										Billing
-									</DropdownMenuItem>
-									<DropdownMenuItem>
-										<CreditCard />
-										Theme
-									</DropdownMenuItem>
-									<DropdownMenuItem>
-										<Bell />
-										Notifications
-									</DropdownMenuItem>
-								</DropdownMenuGroup>
-								<DropdownMenuSeparator />
-								<DropdownMenuItem>
-									<LogOut />
-									Log out
-								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</SidebarMenuItem>
-				</SidebarMenu>
-				{/* Nav User */}
+				<div className="flex items-baseline justify-between">
+					<Button size="icon" variant="ghost">
+						<Settings className="size-5 text-sidebar-foreground/70" />
+					</Button>
+					<ThemeSwitcher />
+				</div>
 			</SidebarFooter>
 			<SidebarRail />
 		</Sidebar>

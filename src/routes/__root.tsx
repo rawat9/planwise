@@ -7,19 +7,21 @@ import { Titlebar } from "@/components/titlebar";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 
-const RootLayout = () => (
-	<div className="overscroll-y-auto overflow-y-scroll bg-sidebar">
-		<ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-			<SidebarProvider>
-				<Titlebar />
-				<AppSidebar />
+const RootLayout = () => {
+	return (
+		<div className="overscroll-y-auto overflow-y-scroll select-none">
+			<ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+				<SidebarProvider>
+					<Titlebar />
+					<AppSidebar />
 
-				<SidebarInset>
-					<Outlet />
-				</SidebarInset>
-			</SidebarProvider>
-		</ThemeProvider>
-	</div>
-);
+					<SidebarInset>
+						<Outlet />
+					</SidebarInset>
+				</SidebarProvider>
+			</ThemeProvider>
+		</div>
+	);
+};
 
 export const Route = createRootRoute({ component: RootLayout });

@@ -138,7 +138,7 @@ function SidebarProvider({
 						} as React.CSSProperties
 					}
 					className={cn(
-						"group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-[calc(100svh-40px)] mt-10 w-full",
+						"group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full",
 						className,
 					)}
 					{...props}
@@ -254,7 +254,7 @@ function Sidebar({
 			<div
 				data-slot="sidebar-container"
 				className={cn(
-					"fixed inset-y-0 z-10 select-none hidden w-(--sidebar-width) transition-[left,right,width] duration-400 ease-[cubic-bezier(0.75,0,0.25,1)] md:flex",
+					"fixed inset-y-0 z-10 hidden w-(--sidebar-width) transition-[left,right,width] duration-400 ease-[cubic-bezier(0.75,0,0.25,1)] md:flex",
 					side === "left"
 						? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
 						: "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
@@ -299,14 +299,14 @@ function SidebarTrigger({ className, onClick, ...props }: SidebarTriggerProps) {
 			data-slot="sidebar-trigger"
 			variant="ghost"
 			size="icon"
-			className={cn("size-7", className)}
+			className={className}
 			onClick={(event) => {
 				onClick?.(event);
 				toggleSidebar();
 			}}
 			{...props}
 		>
-			<PanelLeftIcon className="dark:text-white" />
+			<PanelLeftIcon className="size-5 text-muted-foreground" />
 			<span className="sr-only">Toggle Sidebar</span>
 		</Button>
 	);

@@ -1,21 +1,56 @@
-import { useTheme } from "@/providers/theme-provider";
+import "./titlebar.css";
+
+import { getCurrentWindow } from "@tauri-apps/api/window";
+import { useState } from "react";
 import { SidebarTrigger } from "./animate-ui/components/radix/sidebar";
-import { Button } from "./ui/button";
+
+const appWindow = getCurrentWindow();
 
 export const Titlebar = () => {
-	const { setTheme } = useTheme();
+	const [isFocused, setFocused] = useState(true);
+	const [isFullscreen, setFullscreen] = useState(false);
+
+	appWindow.onFocusChanged(({ payload: isFocused }) => {
+		setFocused(isFocused);
+	});
+
+	appWindow.onResized(async () => {
+		const isFullscreenValue = await appWindow.isFullscreen();
+		setFullscreen(isFullscreenValue);
+	});
 
 	return (
 		<div>
+			<div className="absolute top-0 w-full h-10" data-tauri-drag-region />
 			<div
-				className="absolute top-0 h-10 select-none w-full dark:bg-slate-600"
+				className="px-4 absolute top-0 flex items-center justify-between h-10 w-(--sidebar-width)"
 				data-tauri-drag-region
-			></div>
-			<div className="px-16 flex h-10 items-center absolute top-0 left-20 dark:text-white">
+			>
+				{!isFullscreen ? (
+					<div className={isFocused ? "focus" : ""}>
+						<div className="traffic-lights">
+							<button
+								type="button"
+								className="traffic-light traffic-light-close"
+								id="close"
+								onClick={() => appWindow.unmaximize()}
+							></button>
+							<button
+								type="button"
+								className="traffic-light traffic-light-minimize"
+								id="minimize"
+								onClick={() => appWindow.minimize()}
+							></button>
+							<button
+								type="button"
+								className="traffic-light traffic-light-maximize"
+								id="maximize"
+								onClick={() => appWindow.setFullscreen(true)}
+							></button>
+						</div>
+					</div>
+				) : null}
 				<SidebarTrigger />
-				<Button variant="ghost" onClick={() => setTheme("light")}>
-					Toggle Theme
-				</Button>
 			</div>
 		</div>
 	);
