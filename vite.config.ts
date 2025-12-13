@@ -5,7 +5,6 @@ import path from "node:path";
 import { defineConfig } from "vite";
 
 const host = process.env.TAURI_DEV_HOST;
-console.log("Tauri Host:", host);
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -15,7 +14,7 @@ export default defineConfig({
 			autoCodeSplitting: true,
 		}),
 		react(),
-		tailwindcss() as any,
+		tailwindcss(),
 	],
 	resolve: {
 		alias: {
